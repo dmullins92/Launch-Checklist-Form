@@ -18,6 +18,7 @@ window.addEventListener("load", function() {
 
    let form = document.getElementById('launchForm');
    form.addEventListener("submit", function(event) {
+      
       //launch status texts
       let shuttleReadyText = `Shuttle is ready for launch`
       let shuttleNotReadyText = `Shuttle not ready for launch`;
@@ -38,47 +39,47 @@ window.addEventListener("load", function() {
       let fuelStatus = document.getElementById('fuelStatus');
       let cargoStatus = document.getElementById('cargoStatus');
       //form validation
+      let letters = /^[A-Za-z]+$/;
       if (pilotNameInput.value === '' 
       || copilotNameInput.value === ''
       || fuelLevelInput.value === ''
       || cargoMassInput.value === '') {
          alert('All fields are required!');
          event.preventDefault();
-      }
-      let letters = /^[A-Za-z]+$/;
-      if (!pilotNameInput.value.match(letters)
+      } else if (!pilotNameInput.value.match(letters)
       || !copilotNameInput.value.match(letters)
       || isNaN(Number(fuelLevelInput.value))
       || isNaN(Number(cargoMassInput.value))) {
          alert('Please enter valid inputs for all fields!');
          event.preventDefault();
-      }
-      //document HTML updates
-      if (fuelLevelInput.value >= 10000 
-      && cargoMassInput.value <= 10000 
-      && pilotNameInput.value.match(letters) 
-      && copilotNameInput.value.match(letters)) {
-         faultyItems.style.visibility = 'visible';
-         launchStatus.innerHTML = `${shuttleReadyText}`;
-         launchStatus.style.color = 'green';
-         pilotStatus.innerHTML = `Pilot ${pilotNameInput.value} is ready for launch`;
-         copilotStatus.innerHTML = `Co-Pilot ${copilotNameInput.value} is ready for launch`;
-         fuelStatus.innerHTML = `${fuelStatusReadyText}`;
-         cargoStatus.innerHTML = `${cargoReadyText}`;
-         event.preventDefault();
-      } else if (fuelLevelInput.value < 10000) {
-         faultyItems.style.visibility = 'visible';
-         launchStatus.innerHTML =  `${shuttleNotReadyText}`;
-         launchStatus.style.color = `red`;
-         fuelStatus.innerHTML = `${fuelStatusNotReadyText}`;
-         event.preventDefault();
-      } else if (cargoMassInput.value > 10000) {
-         faultyItems.style.visibility = 'visible';
-         launchStatus.innerHTML =  `${shuttleNotReadyText}`;
-         launchStatus.style.color = 'red';
-         cargoStatus.innerHTML = `${cargoNotReadyText}`;     
-         event.preventDefault(); 
-      } 
+      } else {
+            //document HTML updates
+         if (fuelLevelInput.value >= 10000 
+         && cargoMassInput.value <= 10000 
+         && pilotNameInput.value.match(letters) 
+         && copilotNameInput.value.match(letters)) {
+            faultyItems.style.visibility = 'visible';
+            launchStatus.innerHTML = `${shuttleReadyText}`;
+            launchStatus.style.color = 'green';
+            pilotStatus.innerHTML = `Pilot ${pilotNameInput.value} is ready for launch`;
+            copilotStatus.innerHTML = `Co-Pilot ${copilotNameInput.value} is ready for launch`;
+            fuelStatus.innerHTML = `${fuelStatusReadyText}`;
+            cargoStatus.innerHTML = `${cargoReadyText}`;
+            event.preventDefault();
+         } else if (fuelLevelInput.value < 10000) {
+            faultyItems.style.visibility = 'visible';
+            launchStatus.innerHTML =  `${shuttleNotReadyText}`;
+            launchStatus.style.color = `red`;
+            fuelStatus.innerHTML = `${fuelStatusNotReadyText}`;
+            event.preventDefault();
+         } else if (cargoMassInput.value > 10000) {
+            faultyItems.style.visibility = 'visible';
+            launchStatus.innerHTML =  `${shuttleNotReadyText}`;
+            launchStatus.style.color = 'red';
+            cargoStatus.innerHTML = `${cargoNotReadyText}`;     
+            event.preventDefault(); 
+         }
+      }     
          
    });
 });
