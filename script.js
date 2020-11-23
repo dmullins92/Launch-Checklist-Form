@@ -43,7 +43,6 @@ window.addEventListener("load", function() {
       || fuelLevelInput.value === ''
       || cargoMassInput.value === '') {
          alert('All fields are required!');
-         faultyItems.style.visibility = 'hidden';
          event.preventDefault();
       }
       let letters = /^[A-Za-z]+$/;
@@ -52,7 +51,6 @@ window.addEventListener("load", function() {
       || isNaN(Number(fuelLevelInput.value))
       || isNaN(Number(cargoMassInput.value))) {
          alert('Please enter valid inputs for all fields!');
-         faultyItems.style.visibility = 'hidden';
          event.preventDefault();
       }
       //document HTML updates
