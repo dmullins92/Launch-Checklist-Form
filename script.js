@@ -13,9 +13,10 @@ window.addEventListener('load', function() {
          alert('All fields are required!');
          event.preventDefault();
       }
-      if (typeof pilotNameInput.value === "number"
-      || typeof copilotNameInput.value === "number") {
-         alert('Please enter valid inputs!');
+      let letters = /^[A-Za-z]+$/;
+      if (!pilotNameInput.value.match(letters)
+      || !copilotNameInput.value.match(letters)) {
+         alert('Please enter valid inputs for pilot names!');
          event.preventDefault();
       } 
 
