@@ -3,19 +3,19 @@ window.addEventListener("load", function() {
    fetch("https://handlers.education.launchcode.org/static/planets.json").then(function(response) {
       response.json().then(function(json) {
          let missionTarget = document.getElementById('missionTarget');
-         let randomIndex = Math.floor(Math.random() * json.length);
+         let randomPlanetIndex = Math.floor(Math.random() * json.length);
          missionTarget.innerHTML  += `<h2>Mission Destination</h2>
          <ol>
-            <li>Name: ${json[randomIndex].name}</li>
-            <li>Diameter: ${json[randomIndex].diameter}</li>
-            <li>Star: ${json[randomIndex].star}</li>
-            <li>Distance from Earth: ${json[randomIndex].distance}</li>
-            <li>Number of Moons: ${json[randomIndex].moons}</li>
+            <li>Name: ${json[randomPlanetIndex].name}</li>
+            <li>Diameter: ${json[randomPlanetIndex].diameter}</li>
+            <li>Star: ${json[randomPlanetIndex].star}</li>
+            <li>Distance from Earth: ${json[randomPlanetIndex].distance}</li>
+            <li>Number of Moons: ${json[randomPlanetIndex].moons}</li>
          </ol>
-         <img src="${json[randomIndex].image}">`
+         <img src="${json[randomPlanetIndex].image}">`
       });
    });
-   
+
    let form = document.getElementById('launchForm');
    form.addEventListener("submit", function(event) {
       //launch status texts
@@ -43,6 +43,7 @@ window.addEventListener("load", function() {
       || fuelLevelInput.value === ''
       || cargoMassInput.value === '') {
          alert('All fields are required!');
+         faultyItems.style.visibility = 'hidden';
          event.preventDefault();
       }
       let letters = /^[A-Za-z]+$/;
@@ -51,43 +52,39 @@ window.addEventListener("load", function() {
       || isNaN(Number(fuelLevelInput.value))
       || isNaN(Number(cargoMassInput.value))) {
          alert('Please enter valid inputs for all fields!');
+         faultyItems.style.visibility = 'hidden';
          event.preventDefault();
       }
       //document HTML updates
-      if (pilotNameInput.value.match(letters) && copilotNameInput.value.match(letters)) {
+      if (fuelLevelInput.value >= 10000 
+      && cargoMassInput.value <= 10000 
+      && pilotNameInput.value.match(letters) 
+      && copilotNameInput.value.match(letters)) {
+         faultyItems.style.visibility = 'visible';
+         launchStatus.innerHTML = `${shuttleReadyText}`;
+         launchStatus.style.color = 'green';
          pilotStatus.innerHTML = `Pilot ${pilotNameInput.value} is ready for launch`;
-         pilotStatus.style.visibility = 'visible';
          copilotStatus.innerHTML = `Co-Pilot ${copilotNameInput.value} is ready for launch`;
-         copilotStatus.style.visibility = 'visible';
+         fuelStatus.innerHTML = `${fuelStatusReadyText}`;
+         cargoStatus.innerHTML = `${cargoReadyText}`;
          event.preventDefault();
-      }
-
-      if (fuelLevelInput.value < 10000) {
+      } else if (fuelLevelInput.value < 10000) {
          faultyItems.style.visibility = 'visible';
          launchStatus.innerHTML =  `${shuttleNotReadyText}`;
          launchStatus.style.color = `red`;
          fuelStatus.innerHTML = `${fuelStatusNotReadyText}`;
          event.preventDefault();
-      } 
-      
-      if (cargoMassInput.value > 10000) {
+      } else if (cargoMassInput.value > 10000) {
          faultyItems.style.visibility = 'visible';
          launchStatus.innerHTML =  `${shuttleNotReadyText}`;
          launchStatus.style.color = 'red';
          cargoStatus.innerHTML = `${cargoNotReadyText}`;     
          event.preventDefault(); 
-      }
-
-      if (fuelLevelInput.value >= 10000 && cargoMassInput.value <= 10000) {
-         faultyItems.style.visibility = 'visible';
-         launchStatus.innerHTML = `${shuttleReadyText}`;
-         launchStatus.style.color = 'green';
-         fuelStatus.innerHTML = `${fuelStatusReadyText}`;
-         cargoStatus.innerHTML = `${cargoReadyText}`;
-         event.preventDefault();
-      }    
+      } 
+         
    });
 });
+
 /* This block of code shows how to format the HTML once you fetch some planetary JSON!
 <h2>Mission Destination</h2>
 <ol>
