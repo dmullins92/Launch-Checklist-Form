@@ -4,21 +4,22 @@ window.addEventListener("load", function() {
       response.json().then(function(json) {
          let missionTarget = document.getElementById('missionTarget');
          let randomPlanetIndex = Math.floor(Math.random() * json.length);
+         let planet = json[randomPlanetIndex];
          missionTarget.innerHTML  += `<h2>Mission Destination</h2>
          <ol>
-            <li>Name: ${json[randomPlanetIndex].name}</li>
-            <li>Diameter: ${json[randomPlanetIndex].diameter}</li>
-            <li>Star: ${json[randomPlanetIndex].star}</li>
-            <li>Distance from Earth: ${json[randomPlanetIndex].distance}</li>
-            <li>Number of Moons: ${json[randomPlanetIndex].moons}</li>
+            <li>Name: ${planet.name}</li>
+            <li>Diameter: ${planet.diameter}</li>
+            <li>Star: ${planet.star}</li>
+            <li>Distance from Earth: ${planet.distance}</li>
+            <li>Number of Moons: ${planet.moons}</li>
          </ol>
-         <img src="${json[randomPlanetIndex].image}">`
+         <img src="${planet.image}">`
       });
    });
 
    let form = document.getElementById('launchForm');
    form.addEventListener("submit", function(event) {
-      
+      event.preventDefault();
       //launch status texts
       let shuttleReadyText = `Shuttle is ready for launch`
       let shuttleNotReadyText = `Shuttle not ready for launch`;
@@ -45,39 +46,43 @@ window.addEventListener("load", function() {
       || fuelLevelInput.value === ''
       || cargoMassInput.value === '') {
          alert('All fields are required!');
-         event.preventDefault();
       } else if (!pilotNameInput.value.match(letters)
       || !copilotNameInput.value.match(letters)
       || isNaN(Number(fuelLevelInput.value))
       || isNaN(Number(cargoMassInput.value))) {
          alert('Please enter valid inputs for all fields!');
-         event.preventDefault();
       } else {
             //document HTML updates
+         faultyItems.style.visibility = 'visible';
+
          if (fuelLevelInput.value >= 10000 
-         && cargoMassInput.value <= 10000 
-         && pilotNameInput.value.match(letters) 
-         && copilotNameInput.value.match(letters)) {
-            faultyItems.style.visibility = 'visible';
+         && cargoMassInput.value <= 10000) {            
             launchStatus.innerHTML = `${shuttleReadyText}`;
             launchStatus.style.color = 'green';
             pilotStatus.innerHTML = `Pilot ${pilotNameInput.value} is ready for launch`;
             copilotStatus.innerHTML = `Co-Pilot ${copilotNameInput.value} is ready for launch`;
             fuelStatus.innerHTML = `${fuelStatusReadyText}`;
             cargoStatus.innerHTML = `${cargoReadyText}`;
-            event.preventDefault();
-         } else if (fuelLevelInput.value < 10000) {
-            faultyItems.style.visibility = 'visible';
-            launchStatus.innerHTML =  `${shuttleNotReadyText}`;
+         } 
+
+         if (fuelLevelInput.value >= 10000) {
+            fuelStatus.innerHTML = `${fuelStatusReadyText}`;
+         }
+
+         if (cargoMassInput.value <= 10000) {
+            cargoStatus.innerHTML = `${cargoReadyText}`;
+         }
+         
+         if (fuelLevelInput.value < 10000) {
+            launchStatus.innerHTML = `${shuttleNotReadyText}`;
             launchStatus.style.color = `red`;
             fuelStatus.innerHTML = `${fuelStatusNotReadyText}`;
-            event.preventDefault();
-         } else if (cargoMassInput.value > 10000) {
-            faultyItems.style.visibility = 'visible';
-            launchStatus.innerHTML =  `${shuttleNotReadyText}`;
+         } 
+         
+         if (cargoMassInput.value > 10000) {
+            launchStatus.innerHTML = `${shuttleNotReadyText}`;
             launchStatus.style.color = 'red';
             cargoStatus.innerHTML = `${cargoNotReadyText}`;     
-            event.preventDefault(); 
          }
       }     
          
